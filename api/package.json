@@ -9,9 +9,14 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "type": "commonjs",
+  "type": "module",
   "devDependencies": {
+    "@tsconfig/node24": "^24.0.4",
+    "@types/express": "^5.0.6",
     "@types/node": "^25.5.0",
     "typescript": "^6.0.2"
+  },
+  "dependencies": {
+    "express": "^5.2.1"
   }
 }
