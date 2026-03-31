@@ -1,17 +1,17 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { SetState } from './set-state';
+import { Stepper } from './stepper';
 
-describe('SetState', () => {
-  let component: SetState;
-  let fixture: ComponentFixture<SetState>;
+describe('Stepper', () => {
+  let component: Stepper;
+  let fixture: ComponentFixture<Stepper>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [SetState],
+      imports: [Stepper],
     }).compileComponents();
 
-    fixture = TestBed.createComponent(SetState);
+    fixture = TestBed.createComponent(Stepper);
     component = fixture.componentInstance;
     await fixture.whenStable();
   });

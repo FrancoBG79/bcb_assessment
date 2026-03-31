@@ -1,0 +1,21 @@
+<h2 mat-dialog-title class="compact-title">
+    Transaction Step 
+    <span class="status-label" [ngClass]="getStatusClass()">
+        {{ data.Status.toUpperCase() }}
+    </span>
+</h2>
+
+<mat-dialog-content class="ultra-tight-content">
+  <mat-stepper [linear]="true" [selectedIndex]="data.StageId" class="compact-stepper no-header-margin">
+    <mat-step [completed]="data.StageId >= 0" [editable]="false"><ng-template matStepLabel>1</ng-template></mat-step>
+    <mat-step [completed]="data.StageId >= 1" [editable]="false"><ng-template matStepLabel>2</ng-template></mat-step>
+    <mat-step [completed]="data.StageId >= 2" [editable]="false"><ng-template matStepLabel>3</ng-template></mat-step>
+    <mat-step [completed]="data.StageId >= 3" [editable]="false"><ng-template matStepLabel>4</ng-template></mat-step>
+    <mat-step [completed]="data.StageId >= 4" [editable]="false"><ng-template matStepLabel>5</ng-template></mat-step>
+  </mat-stepper>
+</mat-dialog-content>
+
+<mat-dialog-actions align="center" class="big-actions">
+  <button mat-flat-button color="warn" mat-dialog-close class="large-btn">Close</button>
+  <button mat-flat-button color="primary" mat-dialog-close cdkFocusInitial class="large-btn">Ok</button>
+</mat-dialog-actions>

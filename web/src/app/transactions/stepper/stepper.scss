@@ -1,0 +1,69 @@
+/* Base style for the status span */
+.status-label {
+  font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  padding: 2px 8px;
+  border-radius: 4px;
+  margin-left: 8px;
+  font-size: 0.9em;
+}
+
+/* Color logic */
+.status-red {
+  color: #d32f2f; /* Material Red */
+  background-color: rgba(211, 47, 47, 0.1); /* Subtle background tint */
+}
+
+.status-orange {
+  color: #ef6c00; /* Material Orange */
+  background-color: rgba(239, 108, 0, 0.1);
+}
+
+.status-green {
+  color: #2e7d32; /* Material Green */
+  background-color: rgba(46, 125, 50, 0.1);
+}
+
+/* 1. Shrink the Header space */
+.compact-title {
+  margin: 0 !important;
+  padding: 16px 24px 8px 24px !important; /* Reduced bottom padding */
+}
+
+/* 2. Kill the Stepper's internal body area */
+::ng-deep .compact-stepper .mat-horizontal-stepper-content {
+  display: none !important; /* Completely removes the step body element */
+}
+
+::ng-deep .compact-stepper .mat-horizontal-stepper-header-container {
+  margin-bottom: 0 !important; /* Removes gap below the circles */
+}
+
+/* 3. Tighten the Dialog Content container */
+.ultra-tight-content {
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
+  margin: 0 !important;
+  min-height: unset !important;
+  max-height: none !important;
+}
+
+/* 4. Make buttons bigger and center them */
+.big-actions {
+  padding: 16px 0 !important; /* Adds some breathing room around the buttons only */
+  gap: 12px; /* Adds space between the two buttons */
+}
+
+.large-btn {
+  min-width: 120px !important; /* Makes buttons wider */
+  padding: 20px 24px !important; /* Makes buttons taller */
+  font-size: 1.1rem !important;
+  font-weight: 500;
+}
+
+/* Optional: remove the very top padding of the stepper header itself */
+::ng-deep .mat-horizontal-content-container {
+    padding: 0 !important;
+}

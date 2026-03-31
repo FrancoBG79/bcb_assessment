@@ -17,6 +17,7 @@ import { ToastrService } from 'ngx-toastr';
 
 import { Transaction, TransactionsList, TransactionsService } from '../services/transactions.service';
 import { HistoryDialog } from './history/history';
+import { StepperDialog } from './stepper/stepper';
 
 @Component({
   selector: 'app-transactions',
@@ -39,7 +40,7 @@ export class Transactions implements AfterViewInit, OnDestroy {
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
   loading: boolean = false;
-  displayedColumns: string[] = ['id', 'name', 'amount', 'status', 'updateDate', 'history'];
+  displayedColumns: string[] = ['id', 'name', 'amount', 'status', 'updateDate', 'history', 'step'];
   dataSource: MatTableDataSource<TransactionsList> = new MatTableDataSource<TransactionsList>([]);
 
   
@@ -106,6 +107,14 @@ export class Transactions implements AfterViewInit, OnDestroy {
       data: transaction.Transaction,
       width: '800px',
       height: '600px'
+    });
+  }
+
+  openStepDialog(transaction: TransactionsList) {
+    this.dialog.open(StepperDialog, {
+      data: transaction.Transaction.sort((a, b) => b.StageId - a.StageId)[0],
+      width: '600px',
+      height: '300px'
     });
   }
 
