@@ -71,10 +71,11 @@ export class Transactions implements AfterViewInit, OnDestroy {
           this.toastrService.success('Transactions fetched successfully', 'Success');
           this.cdr.markForCheck();
         },
-        error: (error) => {
+        error: (error: Error) => {
           this.loading = false;
           this.cdr.markForCheck();
-          this.toastrService.error('Error fetching transactions', 'Error');
+          const errorMessage = error?.message || 'Error fetching transactions';
+          this.toastrService.error(errorMessage, 'Error');
           console.error('Error fetching transactions:', error);
         },
         complete: () => {

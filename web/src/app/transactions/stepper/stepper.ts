@@ -52,14 +52,17 @@ export class StepperDialog implements OnDestroy {
       .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: (response) => {
-          this.data = response;
+          this.data = response.Transaction[response.Transaction.length - 1]; // Get the latest transaction
           this.loading = false;
           this.cdr.markForCheck();
         },
-        error: () => {
+        error: (error: Error) => {
           this.loading = false;
           this.cdr.markForCheck();
-        } 
+          const errorMessage = error?.message || 'Error updating stage';
+          console.error('Error updating stage:', error);
+          // You could emit an event to parent component to show error toast
+        }
       });
   }
 

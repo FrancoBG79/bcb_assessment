@@ -2,7 +2,7 @@ import { inject, Injectable } from '@angular/core';
 
 import { environment } from '../../environments/environment';
 import { HttpClient, HttpErrorResponse, HttpResponse } from '@angular/common/http';
-import { catchError, map, Observable } from 'rxjs';
+import { catchError, map, Observable, throwError } from 'rxjs';
 
 export interface TransactionsList {
   TransactionId: string;
@@ -18,6 +18,11 @@ export interface Transaction {
   Status: string;
   StageId: number;
   UpdateDate: string;
+}
+
+export interface ApiError {
+  message: string;
+  status: number;
 }
 
 @Injectable({
@@ -36,7 +41,7 @@ export class TransactionsService {
       map((response: HttpResponse<TransactionsList[]>) => {
         return response.body ?? [];
       }),
-      catchError((error: HttpErrorResponse) =>  { throw new Error(error.message); }),
+      catchError(this.handleError),
     );
   }
 
@@ -48,20 +53,41 @@ export class TransactionsService {
       map((response: HttpResponse<Transaction[]>) => {
         return response.body ?? [];
       }),
-      catchError((error: HttpErrorResponse) =>  { throw new Error(error.message); }),
+      catchError(this.handleError),
     );
   }
 
-  updateStage(transactionId: string): Observable<Transaction> {
-    return this.httpClient.put<Transaction>(`${this.apiUrl}/transactions/${transactionId}`,
+  updateStage(transactionId: string): Observable<TransactionsList> {
+    return this.httpClient.put<TransactionsList>(`${this.apiUrl}/transactions/${transactionId}`,
       {},
       { observe: 'response' }
     )
     .pipe(
-      map((response: HttpResponse<Transaction>) => {
-        return response.body as Transaction;
+      map((response: HttpResponse<TransactionsList>) => {
+        return response.body as TransactionsList;
       }),
-      catchError((error: HttpErrorResponse) =>  { throw new Error(error.message); }),
+      catchError(this.handleError),
     );
   }
+
+  private handleError = (error: HttpErrorResponse): Observable<never> => {
+    let errorMessage = 'An unknown error occurred';
+
+    if (error.error instanceof ErrorEvent) {
+      // Client-side error
+      errorMessage = `Client error: ${error.error.message}`;
+    } else {
+      // Server-side error
+      if (error.error?.message) {
+        errorMessage = error.error.message;
+      } else if (typeof error.error === 'string') {
+        errorMessage = error.error;
+      } else {
+        errorMessage = `Server error: ${error.status} - ${error.message}`;
+      }
+    }
+
+    console.error('API Error:', error);
+    return throwError(() => ({ message: errorMessage, status: error.status }));
+  };
 }
