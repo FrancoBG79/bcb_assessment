@@ -34,7 +34,6 @@ export class HistoryDialog {
   data: Transaction[] = inject(MAT_DIALOG_DATA);
   dataSource: MatTableDataSource<Transaction> = new MatTableDataSource<Transaction>([]);
   constructor() {
-    console.log(this.data);
     this.dataSource.data = this.data.sort((a, b) => b.StageId - a.StageId);
   }
 }

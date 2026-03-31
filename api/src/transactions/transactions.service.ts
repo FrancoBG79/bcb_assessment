@@ -47,21 +47,39 @@ export class TransactionsService {
     
     async populateDummyData() {
         const getCsvData = await this.readCsvFile();
-        return this.transactionsList = getCsvData.map((item) => {
-            return{
+        
+        // We use a Map to keep track of unique TransactionIds we've already seen
+        const groupedMap = new Map<string, TransactionsList>();
+
+        getCsvData.forEach((item) => {
+            // Create the individual transaction entry
+            const transactionDetail = {
                 TransactionId: item.TransactionId,
-                Transaction: [{
-                    TransactionId: item.TransactionId,
-                    FromAddress: item.FromAddress,
-                    ToAddress: item.ToAddress,
-                    TokenName: item.TokenName,
-                    Amount: item.Amount,
-                    Status: item.Status,
-                    StageId: this.getStageID(item.Status),
-                    UpdateDate: new Date().toISOString()
-                }]
+                FromAddress: item.FromAddress,
+                ToAddress: item.ToAddress,
+                TokenName: item.TokenName,
+                Amount: Number(item.Amount), // Ensure it's a number
+                Status: item.Status,
+                StageId: this.getStageID(item.Status),
+                UpdateDate: new Date().toISOString()
             };
+
+            if (groupedMap.has(item.TransactionId)) {
+                // IF ID EXISTS: Push this new status/step into the existing array
+                groupedMap.get(item.TransactionId)!.Transaction.push(transactionDetail);
+            } else {
+                // IF ID IS NEW: Create the parent object and start the array
+                groupedMap.set(item.TransactionId, {
+                    TransactionId: item.TransactionId,
+                    Transaction: [transactionDetail]
+                });
+            }
         });
+
+        // Convert the Map back into a standard array for your component
+        this.transactionsList = Array.from(groupedMap.values());
+        
+        return this.transactionsList;
     }
 
     
@@ -81,6 +99,7 @@ export class TransactionsService {
     }
 
     async nextStage(id: string) {
+        console.log('List A', this.transactionsList)
         const transaction = this.transactionsList.find(transaction => transaction.TransactionId === id);
         if (!transaction) {
             throw new NotFoundException('Transaction not found');
@@ -105,7 +124,7 @@ export class TransactionsService {
             StageId: nextStageId,
             UpdateDate: new Date().toISOString()
         });
-        
+        console.log('List b', this.transactionsList)
         return transaction;
     }
 
