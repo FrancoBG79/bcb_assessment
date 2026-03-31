@@ -67,3 +67,33 @@
 ::ng-deep .mat-horizontal-content-container {
     padding: 0 !important;
 }
+
+/* 1. Make the small spinner sit on the same line as the text */
+.inline-spinner {
+  display: inline-block;
+  vertical-align: middle;
+  margin-left: 8px; /* Space between "Transaction Step" and spinner */
+}
+
+/* 2. Ensure the status label itself handles the inline layout */
+.status-label {
+  display: inline-flex;
+  align-items: center;
+  height: 100%;
+}
+
+/* 3. Center the large spinner horizontally and add vertical padding */
+.spinner-container {
+  display: flex;
+  justify-content: center; /* Horizontal center */
+  align-items: center;     /* Vertical center */
+  width: 100%;
+  padding: 20px 0;         /* Ensures it doesn't touch the header/footer */
+}
+
+/* Optional: Make the title flex so the span stays next to the text */
+.compact-title {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap; /* Prevents awkward breaks on small screens */
+}

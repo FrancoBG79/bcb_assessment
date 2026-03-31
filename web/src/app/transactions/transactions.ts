@@ -42,12 +42,7 @@ export class Transactions implements AfterViewInit, OnDestroy {
   loading: boolean = false;
   displayedColumns: string[] = ['id', 'name', 'amount', 'status', 'updateDate', 'history', 'step'];
   dataSource: MatTableDataSource<TransactionsList> = new MatTableDataSource<TransactionsList>([]);
-
-  
-
   private destroy$ = new Subject<void>();
-
-  
   private readonly transactionsService = inject(TransactionsService);
   private readonly cdr = inject(ChangeDetectorRef);
   dialog = inject(MatDialog);

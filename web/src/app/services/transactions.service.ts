@@ -37,6 +37,31 @@ export class TransactionsService {
         return response.body ?? [];
       }),
       catchError((error: HttpErrorResponse) =>  { throw new Error(error.message); }),
+    );
+  }
+
+  getTransactionHistory(transactionId: string): Observable<Transaction[]> {
+    return this.httpClient.get<Transaction[]>(`${this.apiUrl}/transactions`,
+      { params: { transactionId }, observe: 'response' }
     )
+    .pipe(
+      map((response: HttpResponse<Transaction[]>) => {
+        return response.body ?? [];
+      }),
+      catchError((error: HttpErrorResponse) =>  { throw new Error(error.message); }),
+    );
+  }
+
+  updateStage(transactionId: string): Observable<Transaction> {
+    return this.httpClient.put<Transaction>(`${this.apiUrl}/transactions`,
+      {},
+      { params: { transactionId },observe: 'response' }
+    )
+    .pipe(
+      map((response: HttpResponse<Transaction>) => {
+        return response.body as Transaction;
+      }),
+      catchError((error: HttpErrorResponse) =>  { throw new Error(error.message); }),
+    );
   }
 }
