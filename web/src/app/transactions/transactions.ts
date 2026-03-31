@@ -13,6 +13,8 @@ import { MatDialog } from '@angular/material/dialog';
 
 import { Subject, takeUntil } from 'rxjs';
 
+import { ToastrService } from 'ngx-toastr';
+
 import { Transaction, TransactionsList, TransactionsService } from '../services/transactions.service';
 import { HistoryDialog } from './history/history';
 
@@ -40,12 +42,15 @@ export class Transactions implements AfterViewInit, OnDestroy {
   displayedColumns: string[] = ['id', 'name', 'amount', 'status', 'updateDate', 'history'];
   dataSource: MatTableDataSource<TransactionsList> = new MatTableDataSource<TransactionsList>([]);
 
-  private readonly transactionsService = inject(TransactionsService);
-  private readonly cdr = inject(ChangeDetectorRef);
+  
 
   private destroy$ = new Subject<void>();
 
+  
+  private readonly transactionsService = inject(TransactionsService);
+  private readonly cdr = inject(ChangeDetectorRef);
   dialog = inject(MatDialog);
+  toastrService = inject(ToastrService);
   constructor() {
     this.getAllTransactions();
   }
@@ -66,13 +71,14 @@ export class Transactions implements AfterViewInit, OnDestroy {
         next: (response) => {
           this.dataSource.data = response;
           this.loading = false;
+          this.toastrService.success('Transactions fetched successfully', 'Success');
           this.cdr.markForCheck();
         },
         error: (error) => {
-          console.error('Error fetching transactions:', error);
           this.loading = false;
           this.cdr.markForCheck();
-          // Handle the error as needed, e.g., show an error message to the user
+          this.toastrService.error('Error fetching transactions', 'Error');
+          console.error('Error fetching transactions:', error);
         },
         complete: () => {
           this.loading = false;
