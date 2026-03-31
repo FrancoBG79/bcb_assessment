@@ -70,7 +70,13 @@
           </tr>
         </table>
 
-        <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]" aria-label="Select page of users"></mat-paginator>
+        <mat-paginator 
+          [pageSizeOptions]="[5, 10, 25, 100]" 
+          [length]="dataSource.data.length"
+          [pageSize]="10"
+          showFirstLastButtons
+          aria-label="Select page of transactions">
+        </mat-paginator>
       </div>
   }
 </div>

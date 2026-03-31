@@ -1,4 +1,4 @@
-import { AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, OnDestroy, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, OnDestroy, ViewChild } from '@angular/core';
 import { DatePipe } from '@angular/common';
 
 import { MatToolbarModule } from '@angular/material/toolbar';
@@ -37,7 +37,7 @@ import { StepperDialog } from './stepper/stepper';
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class Transactions implements AfterViewInit, OnDestroy {
+export class Transactions implements OnDestroy {
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
   loading: boolean = false;
@@ -52,14 +52,6 @@ export class Transactions implements AfterViewInit, OnDestroy {
     this.getAllTransactions();
   }
  
-
-  ngAfterViewInit() {
-    if (this.dataSource) {
-      this.dataSource.paginator = this.paginator;
-      this.dataSource.sort = this.sort;
-    }
-  }
-
   getAllTransactions() {
     this.loading = true;
     this.transactionsService.getAllTransactions()
@@ -67,6 +59,9 @@ export class Transactions implements AfterViewInit, OnDestroy {
       .subscribe({
         next: (response) => {
           this.dataSource.data = response;
+          // Connect paginator and sort after data is loaded
+          this.dataSource.paginator = this.paginator;
+          this.dataSource.sort = this.sort;
           this.loading = false;
           this.toastrService.success('Transactions fetched successfully', 'Success');
           this.cdr.markForCheck();
@@ -97,6 +92,9 @@ export class Transactions implements AfterViewInit, OnDestroy {
     if (this.dataSource.paginator) {
       this.dataSource.paginator.firstPage();
     }
+    
+    // Trigger change detection to update paginator display
+    this.cdr.markForCheck();
   }
 
   openHistoryDialog(transaction: TransactionsList) {
