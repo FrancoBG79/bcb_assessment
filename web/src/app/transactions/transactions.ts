@@ -1,12 +1,110 @@
-import { Component } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, inject, OnDestroy, ViewChild } from '@angular/core';
+import { DatePipe } from '@angular/common';
 
-import {MatToolbarModule} from '@angular/material/toolbar';
+import { MatToolbarModule } from '@angular/material/toolbar';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
+import { MatSort, MatSortModule } from '@angular/material/sort';
+import { MatTableDataSource, MatTableModule } from '@angular/material/table';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatButtonModule } from '@angular/material/button';
+import { MatDialog } from '@angular/material/dialog';
+
+import { Subject, takeUntil } from 'rxjs';
+
+import { Transaction, TransactionsList, TransactionsService } from '../services/transactions.service';
+import { HistoryDialog } from './history/history';
 
 @Component({
   selector: 'app-transactions',
-  imports: [MatToolbarModule],
+  imports: [
+    MatToolbarModule, 
+    MatFormFieldModule, 
+    MatInputModule, 
+    MatTableModule, 
+    MatSortModule, 
+    MatPaginatorModule,
+    MatProgressSpinnerModule,
+    DatePipe,
+    MatButtonModule
+  ],
   templateUrl: './transactions.html',
   styleUrl: './transactions.scss',
   standalone: true
 })
-export class Transactions {}
+export class Transactions implements AfterViewInit, OnDestroy {
+  @ViewChild(MatPaginator) paginator!: MatPaginator;
+  @ViewChild(MatSort) sort!: MatSort;
+  loading: boolean = false;
+  displayedColumns: string[] = ['id', 'name', 'amount', 'status', 'updateDate', 'history'];
+  dataSource: MatTableDataSource<TransactionsList> = new MatTableDataSource<TransactionsList>([]);
+
+  private readonly transactionsService = inject(TransactionsService);
+  private readonly cdr = inject(ChangeDetectorRef);
+
+  private destroy$ = new Subject<void>();
+
+  dialog = inject(MatDialog);
+  constructor() {
+    this.getAllTransactions();
+  }
+ 
+
+  ngAfterViewInit() {
+    if (this.dataSource) {
+      this.dataSource.paginator = this.paginator;
+      this.dataSource.sort = this.sort;
+    }
+  }
+
+  getAllTransactions() {
+    this.loading = true;
+    this.transactionsService.getAllTransactions()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (response) => {
+          this.dataSource.data = response;
+          this.loading = false;
+          this.cdr.markForCheck();
+        },
+        error: (error) => {
+          console.error('Error fetching transactions:', error);
+          this.loading = false;
+          this.cdr.markForCheck();
+          // Handle the error as needed, e.g., show an error message to the user
+        },
+        complete: () => {
+          this.loading = false;
+          this.cdr.markForCheck();
+        }
+    });
+  }
+
+  getLatestTransactionStage(transaction: TransactionsList): Transaction {
+    const lastStage = transaction.Transaction.sort((a, b) => b.StageId - a.StageId)[0];
+    return lastStage;
+  }
+
+  applyFilter(event: Event) {
+    const filterValue = (event.target as HTMLInputElement).value;
+    this.dataSource.filter = filterValue.trim().toLowerCase();
+
+    if (this.dataSource.paginator) {
+      this.dataSource.paginator.firstPage();
+    }
+  }
+
+  openHistoryDialog(transaction: TransactionsList) {
+    this.dialog.open(HistoryDialog, {
+      data: transaction.Transaction,
+      width: '800px',
+      height: '600px'
+    });
+  }
+
+   ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
+}
