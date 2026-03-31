@@ -7,6 +7,10 @@ import { TransactionsList } from './dto/transactionsList.dto';
 
 @Injectable()
 export class TransactionsService {
+    
+    constructor() {
+        this.populateDummyData();
+    };
 
     transactionsList: TransactionsList[] = []
 
@@ -60,6 +64,7 @@ export class TransactionsService {
         });
     }
 
+    
     async findAll() {
         if(this.transactionsList.length === 0) {
             await this.populateDummyData();
@@ -68,9 +73,6 @@ export class TransactionsService {
     }
 
     async findOne(id: string) {
-        if(this.transactionsList.length === 0) {
-            await this.populateDummyData();
-        }
         const transaction = this.transactionsList.find(transaction => transaction.TransactionId === id);
         if (!transaction) {
             throw new NotFoundException('Transaction not found');
@@ -79,9 +81,6 @@ export class TransactionsService {
     }
 
     async nextStage(id: string) {
-        if(this.transactionsList.length === 0) {
-            await this.populateDummyData();
-        }
         const transaction = this.transactionsList.find(transaction => transaction.TransactionId === id);
         if (!transaction) {
             throw new NotFoundException('Transaction not found');
@@ -109,4 +108,5 @@ export class TransactionsService {
         
         return transaction;
     }
+
 }
