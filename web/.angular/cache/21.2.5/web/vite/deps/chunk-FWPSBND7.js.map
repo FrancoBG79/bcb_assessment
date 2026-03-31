@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": ["../../../../../../node_modules/rxjs/dist/esm5/internal/observable/throwError.js"],
+  "sourcesContent": ["import { Observable } from '../Observable';\nimport { isFunction } from '../util/isFunction';\nexport function throwError(errorOrErrorFactory, scheduler) {\n    var errorFactory = isFunction(errorOrErrorFactory) ? errorOrErrorFactory : function () { return errorOrErrorFactory; };\n    var init = function (subscriber) { return subscriber.error(errorFactory()); };\n    return new Observable(scheduler ? function (subscriber) { return scheduler.schedule(init, 0, subscriber); } : init);\n}\n"],
+  "mappings": ";;;;;;;;AAEO,SAAS,WAAW,qBAAqB,WAAW;AACvD,MAAI,eAAe,WAAW,mBAAmB,IAAI,sBAAsB,WAAY;AAAE,WAAO;AAAA,EAAqB;AACrH,MAAI,OAAO,SAAU,YAAY;AAAE,WAAO,WAAW,MAAM,aAAa,CAAC;AAAA,EAAG;AAC5E,SAAO,IAAI,WAAW,YAAY,SAAU,YAAY;AAAE,WAAO,UAAU,SAAS,MAAM,GAAG,UAAU;AAAA,EAAG,IAAI,IAAI;AACtH;",
+  "names": []
+}
