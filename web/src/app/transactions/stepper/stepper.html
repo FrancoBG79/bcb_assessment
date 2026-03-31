@@ -4,7 +4,7 @@
     @if (loading) {
       <mat-spinner diameter="20" class="inline-spinner"></mat-spinner>
     } @else {
-      {{ data.Status.toUpperCase() }}
+      {{ data?.Status?.toUpperCase() || 'UNKNOWN' }}
     }
   </span>
 </h2>
@@ -24,3 +24,10 @@
     </mat-stepper>
   }
 </mat-dialog-content>
+
+<mat-dialog-actions align="center" class="big-actions">
+  <button mat-flat-button color="warn" mat-dialog-close class="large-btn">Close</button>
+  @if (data.StageId < 4) {
+    <button mat-flat-button color="primary" mat-dialog-close cdkFocusInitial class="large-btn" (click)="nextStage()">Next</button>
+  }
+</mat-dialog-actions>

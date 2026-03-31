@@ -41,8 +41,8 @@ export class TransactionsService {
   }
 
   getTransactionHistory(transactionId: string): Observable<Transaction[]> {
-    return this.httpClient.get<Transaction[]>(`${this.apiUrl}/transactions`,
-      { params: { transactionId }, observe: 'response' }
+    return this.httpClient.get<Transaction[]>(`${this.apiUrl}/transactions/${transactionId}`,
+      { observe: 'response' }
     )
     .pipe(
       map((response: HttpResponse<Transaction[]>) => {
@@ -53,9 +53,9 @@ export class TransactionsService {
   }
 
   updateStage(transactionId: string): Observable<Transaction> {
-    return this.httpClient.put<Transaction>(`${this.apiUrl}/transactions`,
+    return this.httpClient.put<Transaction>(`${this.apiUrl}/transactions/${transactionId}`,
       {},
-      { params: { transactionId },observe: 'response' }
+      { observe: 'response' }
     )
     .pipe(
       map((response: HttpResponse<Transaction>) => {

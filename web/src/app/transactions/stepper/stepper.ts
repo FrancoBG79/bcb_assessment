@@ -1,4 +1,4 @@
-import { Component, inject, OnDestroy } from '@angular/core';
+import { ChangeDetectorRef, Component, inject, OnDestroy } from '@angular/core';
 import { NgClass } from '@angular/common';
 
 import { MatStepperModule } from '@angular/material/stepper';
@@ -13,9 +13,9 @@ import {
 import { MatTableModule } from '@angular/material/table';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
-import { Subject } from 'rxjs';
+import { Subject, takeUntil } from 'rxjs';
 
-import { Transaction } from '../../services/transactions.service';
+import { Transaction, TransactionsService } from '../../services/transactions.service';
 
 @Component({
   selector: 'app-stepper',
@@ -37,9 +37,8 @@ export class StepperDialog implements OnDestroy {
   loading: boolean = false;
   data: Transaction = inject(MAT_DIALOG_DATA);
   private destroy$ = new Subject<void>();
-  constructor() {
-    console.log(this.data);
-  }
+  private readonly transactionsService = inject(TransactionsService);
+  private readonly cdr = inject(ChangeDetectorRef);
 
   getStatusClass() {
     if (this.data.StageId <= 1) return 'status-red';
@@ -47,7 +46,22 @@ export class StepperDialog implements OnDestroy {
     return 'status-green';
   }
 
-  nextStage() {}
+  nextStage() {
+    this.loading = true;
+    this.transactionsService.updateStage(this.data.TransactionId)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (response) => {
+          this.data = response;
+          this.loading = false;
+          this.cdr.markForCheck();
+        },
+        error: () => {
+          this.loading = false;
+          this.cdr.markForCheck();
+        } 
+      });
+  }
 
   ngOnDestroy(): void {
     this.destroy$.next();

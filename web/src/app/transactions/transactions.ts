@@ -1,4 +1,4 @@
-import { AfterViewInit, ChangeDetectorRef, Component, inject, OnDestroy, ViewChild } from '@angular/core';
+import { AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, OnDestroy, ViewChild } from '@angular/core';
 import { DatePipe } from '@angular/common';
 
 import { MatToolbarModule } from '@angular/material/toolbar';
@@ -34,7 +34,8 @@ import { StepperDialog } from './stepper/stepper';
   ],
   templateUrl: './transactions.html',
   styleUrl: './transactions.scss',
-  standalone: true
+  standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class Transactions implements AfterViewInit, OnDestroy {
   @ViewChild(MatPaginator) paginator!: MatPaginator;
@@ -110,6 +111,9 @@ export class Transactions implements AfterViewInit, OnDestroy {
       data: transaction.Transaction.sort((a, b) => b.StageId - a.StageId)[0],
       width: '600px',
       height: '300px'
+    }).afterClosed().subscribe(() => {
+      this.getAllTransactions();
+      this.cdr.detectChanges();
     });
   }
 
