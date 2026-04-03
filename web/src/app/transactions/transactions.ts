@@ -99,7 +99,7 @@ export class Transactions implements OnDestroy {
 
   openHistoryDialog(transaction: TransactionsList) {
     this.dialog.open(HistoryDialog, {
-      data: transaction.Transaction,
+      data: transaction,
       width: '800px',
       height: '600px'
     });
@@ -116,7 +116,7 @@ export class Transactions implements OnDestroy {
     });
   }
 
-   ngOnDestroy(): void {
+  ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();
   }

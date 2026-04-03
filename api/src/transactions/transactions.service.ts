@@ -95,7 +95,8 @@ export class TransactionsService {
         if (!transaction) {
             throw new NotFoundException('Transaction not found');
         }
-        return transaction;
+        console.log('Found transaction:', transaction);
+        return transaction.Transaction;
     }
 
     async nextStage(id: string) {

@@ -1,7 +1,7 @@
 import { IsString, IsArray, ValidateNested } from 'class-validator';
 import { Type } from 'class-transformer';
 
-class TransactionResponseDto {
+export class TransactionResponseDto {
   @IsString()
   TransactionId: string;
 

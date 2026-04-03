@@ -1,6 +1,7 @@
 import { Controller, Get, Param, Put, HttpException, HttpStatus } from '@nestjs/common';
 import { TransactionsService } from './transactions.service';
-import { TransactionsListResponseDto } from './dto/transactions-response.dto';
+import { TransactionsListResponseDto,  } from './dto/transactions-response.dto';
+import { TransactionResponseDto } from './dto/transactions-response.dto';
 
 @Controller('transactions')
 export class TransactionsController {
@@ -17,7 +18,7 @@ export class TransactionsController {
     }
 
     @Get(':id')
-    async findOne(@Param('id') id: string): Promise<TransactionsListResponseDto> {
+    async findOne(@Param('id') id: string): Promise<TransactionResponseDto[]> {
         try {
             return await this.transactionsService.findOne(id);
         } catch (error) {

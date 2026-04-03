@@ -4,7 +4,7 @@
     @if (loading) {
       <mat-spinner diameter="20" class="inline-spinner"></mat-spinner>
     } @else {
-      {{ data?.Status?.toUpperCase() || 'UNKNOWN' }}
+      {{ data.Status.toUpperCase() || 'UNKNOWN' }}
     }
   </span>
 </h2>
