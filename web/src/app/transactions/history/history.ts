@@ -11,6 +11,7 @@ import {
 } from '@angular/material/dialog';
 import { MatTableModule } from '@angular/material/table';
 import { MatButtonModule } from '@angular/material/button';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 import { Transaction, TransactionsList, TransactionsService } from '../../services/transactions.service';
 import { Subject, takeUntil } from 'rxjs';
@@ -25,7 +26,8 @@ import { ToastrService } from 'ngx-toastr';
     MatTableModule,
     MatDialogActions,
     MatDialogClose,
-    MatButtonModule
+    MatButtonModule,
+    MatProgressSpinnerModule
   ],
   templateUrl: './history.html',
   styleUrl: './history.scss',
